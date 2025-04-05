@@ -25,7 +25,7 @@ def upServer(id):
     if (id == "t") :
         name = "tm_server_time"
         path = "./compose/time"
-    p = subprocess.Popen(["docker-compose", "-p", name,
+    p = subprocess.Popen(["docker", "compose", "-p", name,
                           "-f", "docker-compose.yaml", "up", "-d"], cwd=path)
     print(p.communicate())
 
@@ -42,9 +42,17 @@ def downServer(id):
     if (id == "t") :
         name = "tm_server_time"
         path = "./compose/time/"
-    p = subprocess.Popen(["docker-compose", "-p", name,
+    p = subprocess.Popen(["docker", "compose", "-p", name,
                           "-f", "docker-compose.yaml", "down", "-v"], cwd=path)
     print(p.communicate())
+
+def restartServer(id):
+    """
+    It takes an id as a parameter, and then restarts the server with that id
+    :param id: the id of the server
+    """
+    downServer(id)
+    upServer(id)
 
 
 def status():
@@ -66,13 +74,16 @@ def main(args):
         status()
         exit(0)
     try:
-        listServer = args[2]
+        listServer = args[2:]
         if (args[1] == "up"):
             for i in range(len(listServer)):
                 upServer(listServer[i])
         elif (args[1] == "down"):
             for i in range(len(listServer)):
                 downServer(listServer[i])
+        elif (args[1] == "restart"):
+            for i in range(len(listServer)):
+                restartServer(listServer[i])
         else:
             print("[ERROR] Wrong argument : '{0}' is not regonized as a valid argument.".format(
                 args[1]))
