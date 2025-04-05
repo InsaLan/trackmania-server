@@ -20,11 +20,11 @@ for i in range(len(maps)):
 
 with open("cfg_to_copy.xml", "w+", encoding="utf-8") as f:
     playlist = etree.Element("playlist")
-    gameinfo = etree.SubElement(playlist, "gameinfo")
-    etree.SubElement(gameinfo, "game_mode").text = str(settings[args.config]["gameinfo"]["game_mode"])
-    etree.SubElement(gameinfo, "script_name").text = str(settings[args.config]["gameinfo"]["script_name"])
+    gameinfos = etree.SubElement(playlist, "gameinfos")
+    etree.SubElement(gameinfos, "game_mode").text = str(settings[args.config]["gameinfo"]["game_mode"])
+    etree.SubElement(gameinfos, "script_name").text = str(settings[args.config]["gameinfo"]["script_name"])
 
-    filter = etree.SubElement(gameinfo, "filter")
+    filter = etree.SubElement(playlist, "filter")
     etree.SubElement(filter, "is_lan").text = "1" if settings[args.config]["gameinfo"]["filter"]["is_lan"] else "0"
     etree.SubElement(filter, "random_map_order").text = "1" if settings[args.config]["gameinfo"]["filter"]["random_map_order"] else "0"
 
