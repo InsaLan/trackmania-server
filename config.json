@@ -1,0 +1,24 @@
+{
+	"default": {
+		"gameinfo": {
+			"game_mode": 0,
+			"script_name": "Trackmania/TM_Cup_Online",
+			"filter": {
+				"random_map_order": false,
+				"is_lan": true
+			}
+		},
+		"script_settings": {
+			"S_PointsLimit": 140,
+			"S_PointsRepartition": [10, 7, 5, 3],
+			"S_NbWinners": 3,
+			"S_RoundsPerMap": 4,
+			"S_FinishTimeout": 15,
+			"S_ProgressiveActivation_PlayersNbRatio": 2,
+			"S_MatchmakingProgressive": 0,
+			"S_WarmUpDuration": -1,
+			"S_WarmUpNb": -1
+		},
+		"startindex": 0
+	}
+}
