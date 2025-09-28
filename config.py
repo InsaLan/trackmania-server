@@ -1,9 +1,10 @@
 #!/bin/python3
 
-from lxml import etree
 from argparse import ArgumentParser
+import xml.etree.ElementTree as etree
 import json
 import os
+import xml.dom.minidom
 
 parser = ArgumentParser()
 parser.add_argument("maps", help="Map folder name in compose/maps")
@@ -46,8 +47,9 @@ with open("cfg_to_copy.xml", "w+", encoding="utf-8") as f:
         map = etree.SubElement(playlist, "map")
         etree.SubElement(map, "file").text = f"{args.maps}/{maps[int(i)]}"
 
-    f.write("<?xml version='1.0' encoding='utf-8'?>\n")
-    f.write(etree.tostring(playlist, pretty_print=True).decode('utf-8'))
+    xml_str = etree.tostring(playlist, encoding='utf-8')
+    pretty_xml = xml.dom.minidom.parseString(xml_str).toprettyxml(indent="  ")
+    f.write(pretty_xml)
 
 for cup in os.listdir("compose"):
     if "cup" in cup:

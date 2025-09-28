@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/bin/python3
 
 """
-Run ./trackmania <action> <ports>
+Run ./trackmania.py <action> <ports>
 
 <action> can be 'down', 'up', 'status'.
 <ports> is numbers concatenated referencing the server to affect. 'status' does not required any port.
@@ -93,7 +93,7 @@ def main(args):
             args[1]))
         exit(1)
     except FileNotFoundError as e:
-        sys.stderr.write(e.args)
+        sys.stderr.write(str(e.args))
         sys.stderr.write(
             "[ERROR] Index out of bound : specified server does not exist, no directory found with that index.\n")
         exit(1)

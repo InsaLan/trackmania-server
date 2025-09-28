@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" ?>
 <playlist>
   <gameinfos>
     <game_mode>0</game_mode>
@@ -21,18 +21,18 @@
   </script_settings>
   <startindex>0</startindex>
   <map>
-    <file>InsaLanXIX/Psyops.Map.Gbx</file>
+    <file>InsaLanXIX/Cipher.Map.Gbx</file>
   </map>
   <map>
-    <file>InsaLanXIX/Cipher.Map.Gbx</file>
+    <file>InsaLanXIX/Mint&amp;Moss_ft_Rabbi.Map.Gbx</file>
   </map>
   <map>
     <file>InsaLanXIX/PouetPouet.Map.Gbx</file>
   </map>
   <map>
-    <file>InsaLanXIX/Yosemite.Map.Gbx</file>
+    <file>InsaLanXIX/Psyops.Map.Gbx</file>
   </map>
   <map>
-    <file>InsaLanXIX/Mint&amp;Moss_ft_Rabbi.Map.Gbx</file>
+    <file>InsaLanXIX/Yosemite.Map.Gbx</file>
   </map>
 </playlist>

@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:bookworm
 
 # update & install packages
 RUN apt-get update -yq && apt-get install -yq curl unzip

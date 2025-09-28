@@ -1,4 +1,34 @@
-# trackmania-server-docker
+# trackmania-server
+
+A pre-configured Trackmania 2020 server for the InsaLan tournament.
+It uses the [trackmania-server docker image](#trackmania-server-docker), with scipts allowing to configure and manage multiple server instances.
+
+## Server management
+
+Trackmania servers can be started / stopped / restarted using the `trackmania.py` script :
+
+```bash
+./trackmania.py <up|down|restart> <server>
+
+# Where <server> is the list of the instances' number separated by spaces
+
+./trackmania.py status
+
+# Prints the status of all the instances
+```
+
+## Server configuration
+
+Server configurations are stored in `config.json` (check [Official Game Modes Settings](https://wiki.trackmania.io/en/dedicated-server/Usage/OfficialGameModesSettings) for more informations on the available options).
+Configurations can be applied to all the servers with the `config.py` script :
+
+```bash
+./config.py <map-pool> <config-name>
+
+# Where <map-pool> is the name of the folder containing the maps that will be used for the server and <config-name> is the name of the configuration in config.json
+```
+
+## trackmania-server-docker
 
 Docker image(s) for running a trackmania 2020 dedicated server + pyplanet easily.
 
@@ -11,7 +41,7 @@ The project is divided into 2 images, separated by tags.
   * This tag is the latest version of the pyplanet server controller image
   * Built from folder ./build-pyplanet
 
-## compose
+### compose
 
 The compose directory contains example compose & config files for actually starting & running container(s) with the built image(s).
 
@@ -29,9 +59,9 @@ You can also easily deploy the stack remotely to a target dedicated server (that
 DOCKER_HOST="ssh://server@remote.addr" docker-compose -p tm_server -f docker-compose.yaml up -d
 ```
 
-### Environment variables
+#### Environment variables
 
-#### SERVER_TITLE
+##### SERVER_TITLE
 
 The TitleID for the game the server should be running. By default set to Trackmania 2020. Possible values are:
 
@@ -42,10 +72,10 @@ The TitleID for the game the server should be running. By default set to Trackma
 * TMValley
 * TMLagoon
 
-#### SERVER_NAME
+##### SERVER_NAME
 
 The visible name for the server.
 
-### PyPlanet configuration
+#### PyPlanet configuration
 
 PyPlanet controller can be configured via `compose/pyplanet/settings/*.yaml` files. For documentation, go to: https://pypla.net/en/latest/intro/configuration.html

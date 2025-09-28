@@ -1,4 +1,4 @@
-FROM python:3.8-buster
+FROM python:3.9-bookworm
 
 # update & install packages
 RUN apt-get update -yq && apt-get install -yq mariadb-client
