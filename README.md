@@ -11,6 +11,7 @@ Trackmania servers can be started / stopped / restarted using the `trackmania.py
 ./trackmania.py <up|down|restart> <server>
 
 # Where <server> is the list of the instances' number separated by spaces
+# If no list is passed, the script will affect all the servers
 
 ./trackmania.py status
 
@@ -23,9 +24,9 @@ Server configurations are stored in `config.json` (check [Official Game Modes Se
 Configurations can be applied to all the servers with the `config.py` script :
 
 ```bash
-./config.py <map-pool> <config-name>
+./config.py
 
-# Where <map-pool> is the name of the folder containing the maps that will be used for the server and <config-name> is the name of the configuration in config.json
+# Just follow the instructions, easy af
 ```
 
 ## trackmania-server-docker

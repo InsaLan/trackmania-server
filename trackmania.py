@@ -12,9 +12,10 @@ ex : './trackmania.py up 12' -> starts cup1 and cup2
 import subprocess
 import shlex
 import sys
+import os
 
 
-def upServer(id):
+def upServer(id: str) -> None:
     """
     It runs a docker-compose command in a specific directory
 
@@ -30,7 +31,7 @@ def upServer(id):
     print(p.communicate())
 
 
-def downServer(id):
+def downServer(id: str) -> None:
     """
     It takes an id as a parameter, and then it runs a docker-compose command to bring down the server
     with that id
@@ -46,7 +47,7 @@ def downServer(id):
                           "-f", "docker-compose.yaml", "down", "-v"], cwd=path)
     print(p.communicate())
 
-def restartServer(id):
+def restartServer(id: str) -> None:
     """
     It takes an id as a parameter, and then restarts the server with that id
     :param id: the id of the server
@@ -55,7 +56,7 @@ def restartServer(id):
     upServer(id)
 
 
-def status():
+def status() -> None:
     """
     Display the status of the Trackmania servers, showing the ID, Uptime, and Name of the running dockers.
     """
@@ -64,9 +65,10 @@ def status():
     print(p.communicate())
 
 
-def main(args):
+def main(args: list[str]) -> None:
     """
-    It starts or closes the servers in the list of servers passed as an argument
+    It starts or closes the servers in the list of servers passed as an argument.
+    If no server is passed, it starts or closes all the servers.
 
     :param args: the list of arguments passed to the script
     """
@@ -74,7 +76,11 @@ def main(args):
         status()
         exit(0)
     try:
-        listServer = args[2:]
+        listServer: list = args[2:]
+        if (len(listServer) == 0):
+            for cup in os.listdir("compose"):
+                if "cup" in cup:
+                    listServer.append(cup.replace("cup", ""))
         if (args[1] == "up"):
             for i in range(len(listServer)):
                 upServer(listServer[i])
