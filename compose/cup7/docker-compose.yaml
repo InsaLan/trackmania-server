@@ -13,16 +13,17 @@ services:
       MYSQL_PASSWORD: pyplanet
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     healthcheck:
-      test: mysql --user=root --password=$$MYSQL_ROOT_PASSWORD --execute="SHOW DATABASES;"
-      interval: 60s
-      timeout: 2s
-      retries: 1
-      start_period: 15s
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
     networks:
       - server-network
   server:
     build:
       context: ../../build-server
+      dockerfile: Dockerfile
     image: trackmania-server-docker:insalan-server
     restart: on-failure
     depends_on:
@@ -44,11 +45,16 @@ services:
     networks:
       - server-network
   controller:
-    image: harha/trackmania-server-docker:pyplanet
+    build:
+      context: ../../build-pyplanet
+      dockerfile: Dockerfile
+    image: harha/trackmania-server-docker:insalan-pyplanet
     restart: on-failure
     depends_on:
-      - database
-      - server
+      database:
+        condition: service_healthy
+      server:
+        condition: service_started
     volumes:
       - ../pyplanet/settings:/home/server/pyplanet/settings:Z
       - ../maps:/home/server/tm_server/UserData/Maps:z
