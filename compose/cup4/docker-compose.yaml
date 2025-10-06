@@ -56,7 +56,6 @@ services:
       server:
         condition: service_started
     volumes:
-      - ../pyplanet/settings:/home/server/pyplanet/settings:Z
       - ../maps:/home/server/tm_server/UserData/Maps:z
       - ./maps/MatchSettings:/home/server/tm_server/UserData/Maps/MatchSettings:z
     networks:
