@@ -73,7 +73,8 @@ def main() -> None:
 
 	for cup in os.listdir("compose"):
 		if "cup" in cup:
-			os.popen(f"cp compose/{cup}/maps/MatchSettings/cfg_tracklist.xml compose/{cup}/maps/MatchSettings/cfg_tracklist.xml.old")
+			if os.path.exists(f"compose/{cup}/maps/MatchSettings/cfg_tracklist.xml"):
+				os.popen(f"cp compose/{cup}/maps/MatchSettings/cfg_tracklist.xml compose/{cup}/maps/MatchSettings/cfg_tracklist.xml.old")
 			os.popen(f"cp cfg_to_copy.xml compose/{cup}/maps/MatchSettings/cfg_tracklist.xml")
 
 if __name__ == "__main__":

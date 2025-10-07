@@ -1,0 +1,8 @@
+compose/*
+!compose/base
+!compose/maps
+
+compose/maps/*
+!compose/maps/InsaLan*
+
+cfg_to_copy.xml
