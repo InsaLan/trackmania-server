@@ -49,6 +49,7 @@ def main() -> None:
 	# List and select cups
 	cup_directories = [d for d in os.listdir("compose") if "cup" in d]
 	available_cups = {i : cup for i,cup in enumerate(cup_directories)}
+	available_cups[999] = "all cups"
 	if not available_cups:
 		print("No cup to apply the configuration to. Exiting.")
 		exit(1)
@@ -58,6 +59,9 @@ def main() -> None:
 		"Enter the cups names or indexes separated by spaces: ",
 		unique_choice=False
 	)
+	if "all cups" in selected_cups:
+		selected_cups = list(available_cups.values())
+		selected_cups.pop(selected_cups.index("all cups"))
 
 	# List and select configuration
 	settings = json.load(open("config.json", "r"))
