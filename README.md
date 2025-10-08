@@ -1,7 +1,35 @@
 # trackmania-server
 
 A pre-configured Trackmania 2020 server for the InsaLan tournament.
-It uses the [trackmania-server docker image](#trackmania-server-docker), with scipts allowing to configure and manage multiple server instances.
+It uses an updated version of the [trackmania-server docker image](https://hub.docker.com/r/harha/trackmania-server-docker), with scripts allowing to configure and manage multiple server instances.
+
+## Installation
+
+Clone this repository on your machine :
+
+```bash
+git clone https://github.com/InsaLan/trackmania-server.git
+```
+
+Install python script dependencies :
+
+```bash
+cd trackmania-server
+pip install -r requirements.txt
+
+# As most linux distributions directly manage python modules, you may need to create a venv to use pip, or install the modules with your distro's package manager.
+```
+
+Use the `deploy.py` to create the cups :
+
+```bash
+./deploy.py <number_of_cups>
+
+# Where number_of_cups is a number between 1 and 9.
+# You can modify the script to override the 9 limit, but it could lead to unexpected behavior, as the port range allocated to Trackmania servers is 2351-2359.
+```
+
+> Don't forget to [configure the cups](#server-configuration), a server cant' start without a config file.
 
 ## Server management
 
@@ -20,7 +48,7 @@ Trackmania servers can be started / stopped / restarted using the `trackmania.py
 
 ## Server configuration
 
-Server configurations are stored in `config.json` (check [Official Game Modes Settings](https://wiki.trackmania.io/en/dedicated-server/Usage/OfficialGameModesSettings) for more informations on the available options).
+Server configurations are stored in `config.json` (check [Official Game Modes Settings](https://wiki.trackmania.io/en/dedicated-server/Usage/OfficialGameModesSettings) for more informations on the available options, and use the default config as an example).
 Configurations can be applied to all the servers with the `config.py` script :
 
 ```bash
@@ -28,55 +56,3 @@ Configurations can be applied to all the servers with the `config.py` script :
 
 # Just follow the instructions, easy af
 ```
-
-## trackmania-server-docker
-
-Docker image(s) for running a trackmania 2020 dedicated server + pyplanet easily.
-
-The project is divided into 2 images, separated by tags.
-
-* :server
-  * This tag is the latest version of the trackmania server image
-  * Built from folder ./build-server
-* :pyplanet
-  * This tag is the latest version of the pyplanet server controller image
-  * Built from folder ./build-pyplanet
-
-### compose
-
-The compose directory contains example compose & config files for actually starting & running container(s) with the built image(s).
-
-You're supposed to edit it to your likings if you want to run your own server. Put your maps into the `compose/maps` folder. Download from trackmania exchange.
-
-Example compose command to deploy the stack. The `p` argument specifies project name that you can change to easily deploy multiple server stacks on same machine.
-
-```bash
-docker-compose -p tm_server -f docker-compose.yaml up -d
-```
-
-You can also easily deploy the stack remotely to a target dedicated server (that has docker running in it)
-
-```bash
-DOCKER_HOST="ssh://server@remote.addr" docker-compose -p tm_server -f docker-compose.yaml up -d
-```
-
-#### Environment variables
-
-##### SERVER_TITLE
-
-The TitleID for the game the server should be running. By default set to Trackmania 2020. Possible values are:
-
-* Trackmania
-* SMStorm
-* TMCanyon
-* TMStadium
-* TMValley
-* TMLagoon
-
-##### SERVER_NAME
-
-The visible name for the server.
-
-#### PyPlanet configuration
-
-PyPlanet controller can be configured via `compose/pyplanet/settings/*.yaml` files. For documentation, go to: https://pypla.net/en/latest/intro/configuration.html
