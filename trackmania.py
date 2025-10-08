@@ -3,7 +3,7 @@
 """
 Run ./trackmania.py <action> <ports>
 
-<action> can be 'down', 'up', 'status'.
+<action> can be 'down', 'up', 'status' or 'restart'.
 <ports> is numbers concatenated referencing the server to affect. 'status' does not required any port.
 
 ex : './trackmania.py up 12' -> starts cup1 and cup2
@@ -47,6 +47,7 @@ def downServer(id: str) -> None:
                           "-f", "docker-compose.yaml", "down", "-v"], cwd=path)
     print(p.communicate())
 
+
 def restartServer(id: str) -> None:
     """
     It takes an id as a parameter, and then restarts the server with that id
@@ -76,11 +77,16 @@ def main(args: list[str]) -> None:
         status()
         exit(0)
     try:
-        listServer: list = args[2:]
+        listServer = args[2:]
         if (len(listServer) == 0):
             for cup in os.listdir("compose"):
                 if "cup" in cup:
                     listServer.append(cup.replace("cup", ""))
+
+        if not all(("cup" + str(x)) in os.listdir("compose") for x in listServer):
+            print(f"[ERROR] Not all mentionned cup exists.")
+            exit(1)
+
         if (args[1] == "up"):
             for i in range(len(listServer)):
                 upServer(listServer[i])
@@ -91,17 +97,15 @@ def main(args: list[str]) -> None:
             for i in range(len(listServer)):
                 restartServer(listServer[i])
         else:
-            print("[ERROR] Wrong argument : '{0}' is not regonized as a valid argument.".format(
-                args[1]))
+            print(f"[ERROR] Wrong argument : '{args[1]}' is not regonized as a valid argument.")
             exit(1)
+
     except IndexError:
-        sys.stderr.write("[ERROR] Wrong number of arguments : '{0}' requires a list of int separated by commas.\n".format(
-            args[1]))
+        sys.stderr.write(f"[ERROR] Wrong number of arguments : '{args[1]}' requires a list of int separated by spaces.")
         exit(1)
     except FileNotFoundError as e:
         sys.stderr.write(str(e.args))
-        sys.stderr.write(
-            "[ERROR] Index out of bound : specified server does not exist, no directory found with that index.\n")
+        sys.stderr.write("[ERROR] Index out of bound : specified server does not exist, no directory found with that index.")
         exit(1)
 
 
