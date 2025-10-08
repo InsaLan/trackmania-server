@@ -46,6 +46,7 @@ def main(args: list[str]) -> None:
 		# Copy base files 
 		cup_dir = os.path.join("compose", f"cup{i}")
 		shutil.copytree(os.path.join("compose", "base"), cup_dir)
+		os.makedirs(os.path.join(cup_dir, "maps", "MatchSettings"), exist_ok=True)
 
 		# Adapt port and cup name
 		with open(os.path.join(cup_dir, "docker-compose.yaml"), "r+") as f:
