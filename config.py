@@ -6,7 +6,6 @@ Run ./config.py
 This script configures server instances with the selected configuration (stored in config.json), map pool (stored in compose/maps) and map order.
 """
 
-
 import xml.etree.ElementTree as etree
 import json
 import os

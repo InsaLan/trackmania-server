@@ -7,9 +7,9 @@ Run ./deploy.py <number_of_cups>
 If you remove this condition, unexpected behavior can happen, as the port range dedicated to Trackmania servers is 2351-2359.
 """
 
-
 import sys
 import os
+import shutil
 
 
 def main(args: list[str]) -> None:
@@ -45,7 +45,7 @@ def main(args: list[str]) -> None:
 		
 		# Copy base files 
 		cup_dir = os.path.join("compose", f"cup{i}")
-		os.system(f"cp -R compose/base/ {cup_dir}")
+		shutil.copytree(os.path.join("compose", "base"), cup_dir)
 
 		# Adapt port and cup name
 		with open(os.path.join(cup_dir, "docker-compose.yaml"), "r+") as f:
