@@ -42,6 +42,58 @@ def selector(pool: dict[int, str], q_str: str, a_str: str, unique_choice: bool =
 		return res[0]
 	return res
 
+
+def to_tm_val(value: bool | int | list) -> str:
+	"""
+	Converts a Python value to its Trackmania setting representation.
+
+	:param value: the Python value to convert
+	:return: the Trackmania string representation of the value
+	"""
+	if isinstance(value, bool):
+		return "1" if value else "0"
+	if isinstance(value, list):
+		return ",".join(str(i) for i in value)
+	return str(value)
+
+
+def handle_gameinfo(parent: etree.Element, data: dict) -> None:
+	"""
+	Handles the gameinfo section of the configuration.
+
+	:param parent: the parent XML element to which the gameinfos element will be added
+	:param data: the dictionary containing gameinfo settings
+	"""
+	game_infos = etree.SubElement(parent, "gameinfos")
+	for k, v in data.items():
+		if isinstance(v, dict):
+			sibling = etree.SubElement(parent, k)
+			for sub_k, sub_v in v.items():
+				etree.SubElement(sibling, sub_k).text = to_tm_val(sub_v)
+		else:
+			etree.SubElement(game_infos, k).text = to_tm_val(v)
+
+
+def handle_script_settings(parent: etree.Element, data: dict) -> None:
+	"""
+	Handles the script_settings section of the configuration.
+
+	:param parent: the parent XML element to which the script_settings element will be added
+	:param data: the dictionary containing script settings
+	"""
+	script_settings = etree.SubElement(parent, "script_settings")
+	for k, v in data.items():
+		setting = etree.SubElement(script_settings, "setting")
+		setting.set("name", k)
+		if isinstance(v, bool):
+			setting.set("type", "boolean")
+		elif isinstance(v, int):
+			setting.set("type", "integer")
+		else:
+			setting.set("type", "string")
+		setting.set("value", to_tm_val(v))
+
+
 def main() -> None:
 	"""
 	Creates and apply the configuration to server instances.
@@ -89,38 +141,30 @@ def main() -> None:
 		unique_choice=False
 	)
 
-	# Build config file from scratch
+	# Build config file tree from scratch
+	playlist_el = etree.Element("playlist")
+	
+	handlers = {
+		"gameinfo": handle_gameinfo,
+		"script_settings": handle_script_settings
+	}
+
+	for key, value in settings[config_name].items():
+		if key in handlers:
+			handlers[key](playlist_el, value)
+		else:
+			etree.SubElement(playlist_el, key).text = to_tm_val(value)
+
+	# Add maps
+	for map_name in ordered_map_pool:
+		map_subel = etree.SubElement(playlist_el, "map")
+		etree.SubElement(map_subel, "file").text = f"{map_pool}/{map_name}"
+
+	# Write config to a temporary file
 	with open("cfg_to_copy.xml", "w+", encoding="utf-8") as f:
-		playlist_el = etree.Element("playlist")
-		gameinfos_subel = etree.SubElement(playlist_el, "gameinfos")
-		etree.SubElement(gameinfos_subel, "game_mode").text = str(settings[config_name]["gameinfo"]["game_mode"])
-		etree.SubElement(gameinfos_subel, "script_name").text = str(settings[config_name]["gameinfo"]["script_name"])
-
-		filter_subel = etree.SubElement(playlist_el, "filter")
-		etree.SubElement(filter_subel, "is_lan").text = "1" if settings[config_name]["gameinfo"]["filter"]["is_lan"] else "0"
-		etree.SubElement(filter_subel, "random_map_order").text = "1" if settings[config_name]["gameinfo"]["filter"]["random_map_order"] else "0"
-
-		script_settings_subel = etree.SubElement(playlist_el, "script_settings")
-		for key, value in settings[config_name]["script_settings"].items():
-			setting_subel = etree.SubElement(script_settings_subel, "setting")
-			setting_subel.set("name", key)
-			if isinstance(value, int):
-				setting_subel.set("type", "integer")
-			elif isinstance(value, bool):
-				setting_subel.set("type", "boolean")
-			else:
-				setting_subel.set("type", "string")
-			setting_subel.set("value", ",".join(str(i) for i in value) if isinstance(value, list) else str(value))
-
-		etree.SubElement(playlist_el, "startindex").text = str(settings[config_name]["startindex"])
-
-		for map in ordered_map_pool:
-			map_subel = etree.SubElement(playlist_el, "map")
-			etree.SubElement(map_subel, "file").text = f"{map_pool}/{map}"
-
-		xml_str = etree.tostring(playlist_el, encoding='utf-8')
-		pretty_xml = xml.dom.minidom.parseString(xml_str).toprettyxml(indent="  ")
-		f.write(pretty_xml)
+		f.write(xml.dom.minidom.parseString(
+			etree.tostring(playlist_el, encoding='utf-8')
+		).toprettyxml(indent="  "))
 
 	# Apply configuration to selected cups
 	for cup in selected_cups:
