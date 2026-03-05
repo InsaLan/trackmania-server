@@ -1,3 +1,6 @@
+.vscode/
+.venv/
+
 compose/*
 !compose/base
 !compose/maps

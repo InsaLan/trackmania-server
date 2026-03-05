@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/env python3
 
 """
 Run ./config.py
@@ -12,7 +12,7 @@ import os
 import xml.dom.minidom
 
 
-def selector(pool: dict[int, str], q_str: str, a_str: str, unique_choice: bool = True) -> str | list[str]:
+def selector(pool: list[str], q_str: str, a_str: str, unique_choice: bool = True, all_choice: bool = False) -> str | list[str]:
 	"""
 	A generic selector asking the user to select one or multiple options.
 	If multiple choices are allowed, they haave to be separated by spaces.
@@ -23,18 +23,23 @@ def selector(pool: dict[int, str], q_str: str, a_str: str, unique_choice: bool =
 	:param unique_choice: whether the choice is a unique value or an ordered list of values
 	"""
 	print(q_str)
-	for i, key in pool.items():
+	for i, key in enumerate(sorted(pool)):
 		print(f"	{i} - {key}")
+	if all_choice:
+		print(f"	999 - all")
 	choices = input(a_str).strip().split()
 	if unique_choice and len(choices) > 1:
 		print("Only one choice is allowed. Exiting.")
 		exit(1)
 	res = []
 	for choice in choices:
-		if choice.isdigit() and int(choice) in pool.keys():
-			res.append(pool[int(choice)])
-		elif choice in pool.values():
+		if choice in pool:
 			res.append(choice)
+		elif choice.isdigit():
+			if all_choice and int(choice) == 999:
+				res = pool
+			elif 0 <= int(choice) < len(pool):
+				res.append(pool[int(choice)])
 		else:
 			print(f"Choice '{choice}' not found. Exiting.")
 			exit(1)
@@ -100,32 +105,27 @@ def main() -> None:
 	"""
 	# List and select cups
 	cup_directories = [d for d in os.listdir("compose") if "cup" in d]
-	available_cups = {i : cup for i,cup in enumerate(cup_directories)}
-	available_cups[999] = "all cups"
-	if not available_cups:
+	if not cup_directories:
 		print("No cup to apply the configuration to. Exiting.")
 		exit(1)
 	selected_cups = selector(
-		available_cups,
+		cup_directories,
 		f"Available cups:",
 		"Enter the cups names or indexes separated by spaces: ",
-		unique_choice=False
+		unique_choice=False,
+		all_choice=True
 	)
-	if "all cups" in selected_cups:
-		selected_cups = list(available_cups.values())
-		selected_cups.pop(selected_cups.index("all cups"))
 
 	# List and select configuration
 	settings = json.load(open("config.json", "r"))
-	configs: dict[int, str] = {i: c for i, c in enumerate(settings.keys())}
 	config_name = str(selector(
-		configs,
+		[str(k) for k in settings.keys()],
 		"Available configurations in config.json:",
 		"Enter the configuration name or index: "
 	))
 
 	# List and select map pool
-	map_pools: dict[int, str] = {i: m for i, m in enumerate(os.listdir(os.path.join("compose","maps")))}
+	map_pools: list[str] = os.listdir(os.path.join("compose","maps"))
 	map_pool = selector(
 		map_pools,
 		"Available map pools in compose/maps:",
@@ -134,9 +134,10 @@ def main() -> None:
 	map_pool_path = os.path.join("compose", "maps", str(map_pool))
 	
 	# List and select map order
-	maps = {i: m for i, m in enumerate(os.listdir(map_pool_path))}
+	maps = os.listdir(map_pool_path)
 	ordered_map_pool = selector(
-		maps, f"Available maps in {map_pool}:",
+		maps, 
+		f"Available maps in {map_pool}:",
 		"Enter the map names or indexes separated by spaces (order matters): ",
 		unique_choice=False
 	)
