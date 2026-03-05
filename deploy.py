@@ -44,7 +44,7 @@ def main(args: list[str]) -> None:
 			break
 		
 		# Copy base files 
-		cup_dir = os.path.join("compose", f"cup{i}")
+		cup_dir = os.path.join("compose", f"cup{i:02}")
 		shutil.copytree(os.path.join("compose", "base"), cup_dir)
 		os.makedirs(os.path.join(cup_dir, "maps", "MatchSettings"), exist_ok=True)
 

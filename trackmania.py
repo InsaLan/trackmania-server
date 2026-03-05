@@ -21,8 +21,8 @@ def upServer(id: str) -> None:
 
     :param id: the id of the server
     """
-    name = "tm_server_" + id
-    path = "./compose/cup" + id + "/"
+    name = f"tm_server_{id:02}"
+    path = f"./compose/cup{id:02}/"
     if (id == "t") :
         name = "tm_server_time"
         path = "./compose/time"
@@ -38,8 +38,8 @@ def downServer(id: str) -> None:
 
     :param id: the id of the server
     """
-    name = "tm_server_" + id
-    path = "./compose/cup" + id + "/"
+    name = f"tm_server_{id:02}"
+    path = f"./compose/cup{id:02}/"
     if (id == "t") :
         name = "tm_server_time"
         path = "./compose/time/"
@@ -83,19 +83,19 @@ def main(args: list[str]) -> None:
                 if "cup" in cup:
                     listServer.append(cup.replace("cup", ""))
 
-        if not all(("cup" + str(x)) in os.listdir("compose") for x in listServer):
+        if not all((f"cup{id:02}") in os.listdir("compose") for id in listServer):
             print(f"[ERROR] Not all mentionned cup exists.")
             exit(1)
 
         if (args[1] == "up"):
-            for i in range(len(listServer)):
-                upServer(listServer[i])
+            for id in listServer:
+                upServer(id)
         elif (args[1] == "down"):
-            for i in range(len(listServer)):
-                downServer(listServer[i])
+            for id in listServer:
+                downServer(id)
         elif (args[1] == "restart"):
-            for i in range(len(listServer)):
-                restartServer(listServer[i])
+            for id in listServer:
+                restartServer(id)
         else:
             print(f"[ERROR] Wrong argument : '{args[1]}' is not regonized as a valid argument.")
             exit(1)

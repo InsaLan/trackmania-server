@@ -22,9 +22,10 @@ def selector(pool: list[str], q_str: str, a_str: str, unique_choice: bool = True
 	:param a_str: the text that will be printed to ask for user input
 	:param unique_choice: whether the choice is a unique value or an ordered list of values
 	"""
+	options = sorted(pool)
 	print(q_str)
-	for i, key in enumerate(sorted(pool)):
-		print(f"	{i} - {key}")
+	for i, key in enumerate(options):
+		print(f"	{i + 1} - {key}")
 	if all_choice:
 		print(f"	999 - all")
 	choices = input(a_str).strip().split()
@@ -33,13 +34,13 @@ def selector(pool: list[str], q_str: str, a_str: str, unique_choice: bool = True
 		exit(1)
 	res = []
 	for choice in choices:
-		if choice in pool:
+		if choice in options:
 			res.append(choice)
 		elif choice.isdigit():
 			if all_choice and int(choice) == 999:
-				res = pool
-			elif 0 <= int(choice) < len(pool):
-				res.append(pool[int(choice)])
+				res = options
+			elif 0 < int(choice) <= len(options):
+				res.append(options[int(choice) - 1])
 		else:
 			print(f"Choice '{choice}' not found. Exiting.")
 			exit(1)
