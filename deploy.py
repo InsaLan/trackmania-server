@@ -13,19 +13,19 @@ import shutil
 
 
 def main(args: list[str]) -> None:
-	# Check arguments validity (1 argument between 1 & 9)
+	# Check arguments validity (1 argument between 1 & 16)
 	if len(args) < 2 or not args[1].isdigit():
 		print(f"Usage: {args[0]} [number of cups to create]")
 		exit(1)
 
 	number_of_cups = int(args[1])
 
-	if not (1 <= number_of_cups <= 9):
-		print("[ERROR] Number of cups must be between 1 and 9")
+	if not (1 <= number_of_cups <= 16):
+		print("[ERROR] Number of cups must be between 1 and 16")
 		exit(1)
 
 	# Check which cups we can create
-	possible_cups = [i for i in range(1, 10)]
+	possible_cups = [i for i in range(1, 17)]
 	current_cups = [int(d.replace("cup", "")) for d in os.listdir("compose") if os.path.isdir(os.path.join("compose", d)) and d.startswith("cup")]
 
 	available_cups = list(set(possible_cups) - set(current_cups))
