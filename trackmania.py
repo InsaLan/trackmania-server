@@ -15,7 +15,7 @@ import sys
 import os
 
 
-def upServer(id: str) -> None:
+def upServer(id: int) -> None:
     """
     It runs a docker-compose command in a specific directory
 
@@ -31,7 +31,7 @@ def upServer(id: str) -> None:
     print(p.communicate())
 
 
-def downServer(id: str) -> None:
+def downServer(id: int) -> None:
     """
     It takes an id as a parameter, and then it runs a docker-compose command to bring down the server
     with that id
@@ -48,7 +48,7 @@ def downServer(id: str) -> None:
     print(p.communicate())
 
 
-def restartServer(id: str) -> None:
+def restartServer(id: int) -> None:
     """
     It takes an id as a parameter, and then restarts the server with that id
     :param id: the id of the server
@@ -82,19 +82,26 @@ def main(args: list[str]) -> None:
             for cup in os.listdir("compose"):
                 if "cup" in cup:
                     listServer.append(cup.replace("cup", ""))
+        
+        serverIDs: list[int] = []
+        for id in listServer:
+            if id.isdigit():
+                serverIDs.append(int(id))
+            else:
+                print(f"[WARNING] '{id}' is not an integer, ignoring.")
 
-        if not all((f"cup{id:02}") in os.listdir("compose") for id in listServer):
+        if not all((f"cup{id:02}") in os.listdir("compose") for id in serverIDs):
             print(f"[ERROR] Not all mentionned cup exists.")
             exit(1)
 
         if (args[1] == "up"):
-            for id in listServer:
+            for id in serverIDs:
                 upServer(id)
         elif (args[1] == "down"):
-            for id in listServer:
+            for id in serverIDs:
                 downServer(id)
         elif (args[1] == "restart"):
-            for id in listServer:
+            for id in serverIDs:
                 restartServer(id)
         else:
             print(f"[ERROR] Wrong argument : '{args[1]}' is not regonized as a valid argument.")
