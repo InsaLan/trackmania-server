@@ -84,7 +84,7 @@ def main(args: list[str]) -> None:
                     listServer.append(cup.replace("cup", ""))
         
         serverIDs: list[int] = []
-        for id in listServer:
+        for id in sorted(listServer):
             if id.isdigit():
                 serverIDs.append(int(id))
             else:

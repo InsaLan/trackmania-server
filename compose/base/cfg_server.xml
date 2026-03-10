@@ -27,10 +27,10 @@
 		<hide_server>0</hide_server> <!-- value is 0 (always shown), 1 (always hidden), 2 (hidden from nations) -->
 
 		<max_players>4</max_players>
-		<password>test</password>
+		<password></password>
 
 		<max_spectators>32</max_spectators>
-		<password_spectator>spec</password_spectator>
+		<password_spectator></password_spectator>
 
 		<keep_player_slots>False</keep_player_slots> <!-- when a player changes to spectator, hould the server keep if player slots/scores etc.. or not. -->
 		<ladder_mode>forced</ladder_mode> <!-- value between 'inactive', 'forced' (or '0', '1') -->
@@ -43,7 +43,7 @@
 		<callvote_ratios>
 			<voteratio command="Ban" ratio="-1" />
 			<voteratio command="Kick" ratio="-1" />
-			<voteratio command="NextMap" ratio="-1" />
+			<voteratio command="NextMap" ratio="1" />
 			<voteratio command="RestartMap" ratio="1" />
 			<voteratio command="SetModeScriptSettingsAndCommands" ratio="-1" />
 			<!-- commands can be "Ban", "Kick", "RestartMap", "NextMap", "SetModeScriptSettingsAndCommands"... -->
